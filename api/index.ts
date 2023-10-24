@@ -17,22 +17,20 @@ import {
 } from "../src/middlewares";
 import routes from "../src/routes";
 
+const isDev = process.env.NODE_ENV === "development";
+
 // Load environment variables
 dotenv.config({
     path: path.resolve(
         process.cwd(),
         "config",
-        process.env.NODE_ENV === "development" ? ".env.development" : ".env"
+        isDev ? ".env.development" : ".env"
     )
 });
 
 console.log(
-    "ENV Path: ",
-    path.resolve(
-        process.cwd(),
-        "config",
-        process.env.NODE_ENV === "development" ? ".env.development" : ".env"
-    )
+    "Loaded ENV Path: ",
+    path.resolve(process.cwd(), "config", isDev ? ".env.development" : ".env")
 );
 
 // Connect MongoDB
@@ -68,7 +66,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors(corsOptionsDelegate));
 app.use(helmet(helmetOptions));
-app.use(morgan(process.env.NODE_ENV === "development" ? "dev" : "combined"));
+app.use(morgan(isDev ? "dev" : "combined"));
 app.use(SendResponseMiddleware);
 
 /* Ping */

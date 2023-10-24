@@ -1,12 +1,12 @@
 import { randomBytes } from "crypto";
 import fs from "fs";
+import path from "path";
 
-const templateEnv = `
-PORT=${process.env.NODE_ENV === "development" ? 5000 : 3000}
+const isDev = process.env.NODE_ENV === "development";
+
+const templateEnv = `PORT=${isDev ? 5000 : 3000}
 BASE_URL="${
-    process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://image-storage-api.anfa.my.id"
+    isDev ? "http://localhost:3000" : "https://image-storage-api.anfa.my.id"
 }"
 ORIGINS="http://localhost:3000, https://image-storage-api.anfa.my.id"
 API_KEY="${randomBytes(32).toString("hex")}"
@@ -16,10 +16,12 @@ MONGODB_URL=""
 `;
 
 (async () => {
-    const configPath = `${process.cwd()}/config`;
-    const envPath = `${configPath}/${
-        process.env.NODE_ENV === "development" ? ".env.development" : ".env"
-    }`;
+    // const configPath = `${process.cwd()}/config`;
+    const configPath = path.resolve(process.cwd(), "config");
+    const envPath = path.relative(
+        configPath,
+        isDev ? ".env.development" : ".env"
+    );
 
     try {
         if (!fs.existsSync(configPath)) {
