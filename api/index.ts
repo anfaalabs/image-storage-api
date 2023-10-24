@@ -80,7 +80,7 @@ app.use("/ping", (_: Request, res: Response) => {
 app.use("/api", routes);
 
 /* Get image by id */
-app.get("/image/:id", ImageController.getImage);
+app.get("/image/:uid", ImageController.getImage);
 
 /* Optional route */
 app.use("*", (_req: Request, res: Response) => {

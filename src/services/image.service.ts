@@ -10,6 +10,11 @@ type CheckFileOptions = {
     errorMessage?: string;
     errorCode?: number;
 };
+type GetImageResponse = TImageSchema["file"] & {
+    path: string;
+    // buffer: ArrayBufferLike;
+    // length: number;
+};
 
 const allowedFileExtensions = [".jpg", ".jpeg", ".png", ".webp"];
 const uploadPath = path.resolve(process.cwd(), "upload");
@@ -84,20 +89,22 @@ export const uploadImage = async (file?: MulterFileType): Promise<string> => {
         throw new ApiError("Could not save image", 500);
     }
 
-    return image._id;
+    return image.uid;
 };
 
 /**
- * Get image by file id
- * @param {String} id id of the file
- * @returns {Promise<TImageSchema["file"]>} filepath
+ * Get image by file uid
+ * @param {String} uid uid of the file
+ * @returns {Promise<GetImageResponse>} filepath
  */
-export const getImage = async (id: string): Promise<TImageSchema["file"]> => {
-    if (!id) {
+export const getImage = async (uid: string): Promise<GetImageResponse> => {
+    if (!uid) {
         throw new ApiError("No id provided", 400);
     }
 
-    const image = await Image.findById(id);
+    const image = await Image.findOne({
+        uid
+    });
 
     if (!image) {
         throw new ApiError("Image not found", 404);
@@ -107,19 +114,26 @@ export const getImage = async (id: string): Promise<TImageSchema["file"]> => {
 
     checkFile(filepath);
 
-    return image.file;
+    // const file = fs.readFileSync(filepath);
+
+    return {
+        ...image.file,
+        path: filepath
+    };
 };
 
 /**
- * Delete image by file id
- * @param {String} id id of the file
+ * Delete image by file uid
+ * @param {String} uid uid of the file
  */
-export const deleteImage = async (id: string) => {
-    if (!id) {
+export const deleteImage = async (uid: string) => {
+    if (!uid) {
         throw new ApiError("No id provided", 400);
     }
 
-    const image = await Image.findById(id);
+    const image = await Image.findOne({
+        uid
+    });
 
     if (!image) {
         throw new ApiError("Image not found", 404);

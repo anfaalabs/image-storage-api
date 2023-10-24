@@ -7,6 +7,6 @@ const router = Router({
 });
 
 router.post("/", UploadMiddleware.single("image"), ImageController.uploadImage);
-router.delete("/:id", ImageController.deleteImage);
+router.delete("/:uid", ImageController.deleteImage);
 
 export default router;
