@@ -9,11 +9,11 @@
     },
     "scripts": {
         "start": "node ./build/start.js",
-        "dev": "cross-env NODE_ENV=\"dev\" nodemon ./start.ts",
-        "build": "npm-run-all setup:production build:production",
+        "dev": "cross-env NODE_ENV=\"development\" nodemon ./start.ts",
+        "build": "npm-run-all build:production setup:production",
         "build:production": "tsc -p ./tsconfig.json",
         "postinstall": "npm run setup:development",
-        "setup:development": "cross-env NODE_ENV=\"dev\" ts-node setup.ts",
+        "setup:development": "cross-env NODE_ENV=\"development\" ts-node setup.ts",
         "setup:production": "ts-node setup.ts",
         "lint": "eslint \"./**/*.ts\"",
         "lint:fix": "eslint \"./**/*.ts\" --fix"

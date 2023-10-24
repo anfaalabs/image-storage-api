@@ -22,9 +22,18 @@ dotenv.config({
     path: path.resolve(
         process.cwd(),
         "config",
-        process.env.NODE_ENV === "dev" ? ".env.development" : ".env"
+        process.env.NODE_ENV === "development" ? ".env.development" : ".env"
     )
 });
+
+console.log(
+    "ENV Path: ",
+    path.resolve(
+        process.cwd(),
+        "config",
+        process.env.NODE_ENV === "development" ? ".env.development" : ".env"
+    )
+);
 
 // Connect MongoDB
 ConnectDB(process.env.MONGODB_URL || "");
@@ -59,7 +68,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors(corsOptionsDelegate));
 app.use(helmet(helmetOptions));
-app.use(morgan(process.env.NODE_ENV === "dev" ? "dev" : "combined"));
+app.use(morgan(process.env.NODE_ENV === "development" ? "dev" : "combined"));
 app.use(SendResponseMiddleware);
 
 /* Ping */

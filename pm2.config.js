@@ -3,7 +3,9 @@ module.exports = {
         {
             name: "image-storage-api",
             script: "./build/start.js",
-            exec_mode: "cluster"
+            env: {
+                NODE_ENV: "production"
+            }
         }
     ]
 };
